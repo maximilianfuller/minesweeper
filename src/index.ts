@@ -4,7 +4,7 @@ const app:Application = express();
 const PORT = process.env.PORT || 8000;
 
 app.get("/", (req:Request, res:Response):void => {
-  res.send("<link rel='stylesheet' href='index.css'><script src='minesweeper.js'></script><h1>Hi Steeeve!!!!!!!</h1><div class='border'></div>")
+  res.sendFile("index.html", {root: __dirname })
 });
 
 app.get("/max/", (req:Request, res:Response):void => {

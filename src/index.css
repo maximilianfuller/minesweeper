@@ -2,3 +2,22 @@ h1 {
   color: navy;
   margin-left: 20px;
 }
+
+div.border {
+  margin: auto;
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+
+div.cell {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 40px; 
+  background-color: purple;
+  position: absolute;
+  border: 3px solid white;
+  font-size: 0;
+}
