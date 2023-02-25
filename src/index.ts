@@ -8,7 +8,7 @@ app.get("/", (req:Request, res:Response):void => {
 });
 
 app.get("/max/", (req:Request, res:Response):void => {
-  res.send("Hey there, Max ;)")
+  res.send("Hey there, Steeeve ;)))")
 });
 
 app.listen(PORT, ():void => {

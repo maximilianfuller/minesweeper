@@ -1,6 +1,8 @@
-NUM_ROWS = 20
-NUM_COLS = 20
-MAX_BOMBS = 70
+TILE_PIXEL_LENGTH = 16
+
+NUM_ROWS = 16
+NUM_COLS = 16
+MAX_BOMBS = 40
 NEIGHBOR_RELATIVE_COORDS = [
   [-1, -1],
   [-1, 0],
@@ -12,7 +14,7 @@ NEIGHBOR_RELATIVE_COORDS = [
   [1, 1]
 ];
 
-BOMBS = [];
+let BOMBS = [];
 for (let i = 0; i < MAX_BOMBS; i++) {
   BOMBS.push(Math.floor(Math.random() * NUM_COLS * NUM_ROWS));
 }
@@ -50,14 +52,15 @@ function isBomb(x, y) {
 }
 
 function reveal(x, y) {
-  let id = x + NUM_COLS * y
-  $("#" + id).css("font-size", 14);
+  let id = x + NUM_COLS * y;
+  $("#" + id).addClass("revealed");
+  console.log($("#" + id).attr("class"));
 
 }
 
 function isRevealed(x, y) {
   let id = x + NUM_COLS * y;
-  return $("#" + id).css("font-size") != "0px";
+  return $("#" + id).hasClass("revealed");
 }
 
 function revealDFS(x, y) {
@@ -87,15 +90,13 @@ $(document).ready(function() {
         id: NUM_COLS * y + x,
         class: 'cell',
       });
-      cell.css("left", 20 * x);
-      cell.css("top", 20 * y);
-      let content = ""
+      cell.css("left", TILE_PIXEL_LENGTH * x);
+      cell.css("top", TILE_PIXEL_LENGTH * y);
       if (isBomb(x, y)) {
-        content = "B"
+        cell.addClass("bomb")
       } else {
-        content = getBombNeighborCount(x, y);
+        cell.addClass("c" + getBombNeighborCount(x, y))
       }
-      cell.html(content)
       cell.click(function() {
         let id = parseInt($(this).attr("id"))
         revealDFS(id % NUM_COLS, Math.floor(id / NUM_COLS));

@@ -5,20 +5,54 @@ h1 {
 
 div.border {
   margin: auto;
-  width: 400px;
-  height: 400px;
+  width: 256px;
+  height: 256px;
   position: relative;
 }
 
 div.cell {
-  width: 20px;
-  height: 20px;
-  text-align: center;
-  vertical-align: middle;
-  line-height: 20px; 
-  background-color: purple;
+  width: 16px;
+  height: 16px;
+  line-height: 16spx; 
   position: absolute;
-  border: 3px solid white;
   font-size: 0;
-  color: white;
+
+  background-image: url("minesweeper.png");
+  background-repeat: no-repeat;
+  background-position: 0px -39px;
+}
+
+div.cell.revealed.bomb {
+  background-position: -32px -39px;
+}
+
+div.cell.revealed.c0 {
+    background-position: 0px -23px;
+}
+div.cell.revealed.c1 {
+    background-position: -16px -23px;
+}
+div.cell.revealed.c2 {
+    background-position: -32px -23px;
+}
+div.cell.revealed.c3 {
+    background-position: -48px -23px;
+}
+div.cell.revealed.c4 {
+    background-position: -64px -23px;
+}
+div.cell.revealed.c5 {
+    background-position: -80px -23px;
+}
+div.cell.revealed.c6 {
+    background-position: -96px -23px;
+}
+div.cell.revealed.c7 {
+    background-position: -112px -23px;
+}
+div.cell.revealed.c8 {
+    background-position: -128px -23px;
+}
+div.cell.revealed.c9 {
+    background-position: -144px -23px;
 }
