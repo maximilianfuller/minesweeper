@@ -27,8 +27,11 @@ div.cell {
   background-repeat: no-repeat;
   background-position: 0px -39px;
 
-/*  filter:  grayscale(50%);
-*/}
+}
+
+div.cell.enemyClicked {
+  filter:  grayscale(100%);
+}
 
 div.cell.revealed.bomb {
   background-position: -32px -39px;

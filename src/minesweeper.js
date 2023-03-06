@@ -25,7 +25,8 @@ webSocket.onmessage = (event) => {
     alert(board.gameOverMessage);
   }
   for (let i = 0; i < board.enemyClickedCells.length; i++) {
-    
+    let id = board.enemyClickedCells[i];
+    $("#" + id).addClass("enemyClicked");
   }
 };
 
