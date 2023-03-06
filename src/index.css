@@ -29,8 +29,8 @@ div.cell {
 
 }
 
-div.cell.enemyClicked {
-  filter:  grayscale(100%);
+div.cell.revealed.enemyClicked {
+  filter:  sepia(30%);
 }
 
 div.cell.revealed.bomb {
