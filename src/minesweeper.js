@@ -10,7 +10,7 @@ let NEIGHBOR_RELATIVE_COORDS = [
   [1, 1]
 ];
 
-let url = location.origin.replace(/^http/, 'ws');
+let url = document.URL.replace('http', 'ws');
 
 let gameOn = false;
 
