@@ -3,11 +3,17 @@ h1 {
   margin-left: 20px;
 }
 
+p {
+  font-size: 8;
+}
+
 div.border {
   margin: auto;
-  width: 256px;
-  height: 256px;
+  width: 144px;
+  height: 144px;
   position: relative;
+  border: 1px solid;
+  border-color: #f1efe2 #716f64 #716f64 #f1efe2;
 }
 
 div.cell {
@@ -20,7 +26,9 @@ div.cell {
   background-image: url("minesweeper.png");
   background-repeat: no-repeat;
   background-position: 0px -39px;
-}
+
+/*  filter:  grayscale(50%);
+*/}
 
 div.cell.revealed.bomb {
   background-position: -32px -39px;
