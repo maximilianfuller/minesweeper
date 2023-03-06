@@ -1,10 +1,21 @@
 import express, {Request,Response,Application} from 'express';
-import { WebSocketServer } from 'ws';
+import { Server } from 'ws';
 
 const app:Application = express();
 app.use(express.static('dist'));
 app.use(express.static('src'));
-const wss = new WebSocketServer({ port: 8080 });
+const PORT = process.env.PORT || 8000;
+
+// Setup express server
+app.get("/game/:id", (req:Request, res:Response):void => {
+  res.sendFile("index.html", {root: __dirname })
+});
+
+const server = app.listen(PORT, ():void => {
+  console.log(`Server Running here 👉 http://localhost:${PORT}`);
+});
+
+const wss = new Server({server});
 
 let games = new Map<string, any>()
 
@@ -102,15 +113,6 @@ wss.on('connection', function connection(ws: any, req: any) {
   });
   ws.on('error', console.error);
 
-});
-
-// Setup express server
-app.get("/game/:id", (req:Request, res:Response):void => {
-  res.sendFile("index.html", {root: __dirname })
-});
-
-app.listen(8000, ():void => {
-  console.log(`Server Running here 👉 http://localhost:${8000}`);
 });
 
 

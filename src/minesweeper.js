@@ -10,7 +10,7 @@ let NEIGHBOR_RELATIVE_COORDS = [
   [1, 1]
 ];
 
-let url = document.URL.replace('http', 'ws').replace('8000', '8080');
+let url = location.origin.replace(/^http/, 'ws');
 
 let gameOn = false;
 
@@ -23,6 +23,9 @@ webSocket.onmessage = (event) => {
   }
   if (board.gameOverMessage) {
     alert(board.gameOverMessage);
+  }
+  for (let i = 0; i < board.enemyClickedCells.length; i++) {
+    
   }
 };
 
