@@ -24,6 +24,19 @@ function createBoard() {
   let NUM_COLS = 9
   let MAX_BOMBS = 10
   let bombs : Array<number> = [];
+  let NEIGHBOR_RELATIVE_COORDS = [
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+    [0, -1],
+    [0, 1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
+    [0, 0] 
+  ];
+
+  // create bombs
   for (let i = 0; i < MAX_BOMBS; i++) {
     let bomb = -1;
     do {
@@ -32,7 +45,31 @@ function createBoard() {
     bombs.push(bomb);
   }
 
-  return {"bombs": bombs, "numRows": NUM_ROWS, "numCols": NUM_COLS};
+  // Find a random empty square
+  let zero_cells = []
+  let bomb_set = new Set([...bombs])
+  for (let i = 0; i < NUM_ROWS*NUM_COLS; i++) {
+    let has_bomb_neighbor = false;
+    for (let c = 0; c < NEIGHBOR_RELATIVE_COORDS.length; c++) {
+      let x = i%NUM_COLS + NEIGHBOR_RELATIVE_COORDS[c][0];
+      let y = Math.floor(i/NUM_COLS) + NEIGHBOR_RELATIVE_COORDS[c][1];
+      if (x < 0 || y < 0 || x >= NUM_COLS || y >= NUM_ROWS) {
+        continue;
+      }
+
+      if (bomb_set.has(x+y*NUM_ROWS)) {
+        has_bomb_neighbor = true;
+        break;
+      }
+    }
+    if (!has_bomb_neighbor) {
+      zero_cells.push(i);
+    }
+  }
+  let start = zero_cells[Math.floor(Math.random()*zero_cells.length)];
+
+
+  return {"bombs": bombs, "start": start, "numRows": NUM_ROWS, "numCols": NUM_COLS};
 }
 
 function handleClientCreate(ws: any, url: string) {
@@ -66,6 +103,25 @@ function handleClientUpdate(ws: any, url: string, data: any) {
 
   } else {
     updateClients(url);
+  }
+}
+
+function handleClientDisconnect(ws: any, url: string) {
+  if (games.has(url)) {
+    let game = games.get(url)!
+    if (game.p2) {
+      let players = ["p1", "p2"];
+      for(let i = 0; i < 2; i++) {
+        let player = players[i];
+        let other = players[(i+1)%2];
+        if (ws.id == player) {
+          console.log("Player " + player + " left the game.")
+          game.winner = other;
+          updateClients(url);
+          games.delete(url);
+        }
+      }
+    }
   }
 }
 
@@ -117,6 +173,9 @@ wss.on('connection', function connection(ws: any, req: any) {
     handleClientUpdate(ws, req.url, data)
   });
   ws.on('error', console.error);
+  ws.on('close', function close() {
+    handleClientDisconnect(ws, req.url);
+  });
 
 });
 

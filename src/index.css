@@ -29,8 +29,12 @@ div.cell {
 
 }
 
+div.cell.start {
+  filter:  sepia(100%);
+}
+
 div.cell.revealed.enemyClicked {
-  filter:  sepia(30%);
+  filter:  sepia(50%);
 }
 
 div.cell.revealed.bomb {

@@ -97,7 +97,7 @@ function revealDFS(x, y, board) {
   }
   reveal(x, y, board);
 
-  if (getBombNeighborCount(x, y, board) > 0) {
+  if (getBombNeighborCount(x, y, board) > 0 || isBomb(x, y, board)) {
     return;
   }
 
@@ -129,6 +129,7 @@ function setupBoard(board) {
       $('.border').append(cell);
     }
   }
+  $("#" + board.start).addClass("start");
 }
 
 $(document).ready(function() {
