@@ -22,7 +22,10 @@ webSocket.onmessage = (event) => {
     setupBoard(board);
   }
   if (board.gameOverMessage) {
-    alert(board.gameOverMessage);
+    if(!alert(board.gameOverMessage)) {
+      console.log("reload");
+      window.location.reload();
+    }
   }
   for (let i = 0; i < board.enemyClickedCells.length; i++) {
     let id = board.enemyClickedCells[i];

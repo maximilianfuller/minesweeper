@@ -60,8 +60,13 @@ function handleClientUpdate(ws: any, url: string, data: any) {
   if (winner) {
     console.log("winner!" + winner);
     game.winner = winner;
+    updateClients(url);
+    // Scrub game from server
+    games.delete(url);
+
+  } else {
+    updateClients(url);
   }
-  updateClients(url);
 }
 
 function maybeGetWinner(url: string) {
