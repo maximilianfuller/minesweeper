@@ -52,11 +52,19 @@ div.cell {
   background-image: url("minesweeper.png");
   background-repeat: no-repeat;
   background-position: 0px -39px;
-
 }
 
-div.cell.start {
+div.cell.start:not(.revealed) {
   filter:  sepia(100%);
+}
+
+div.cell.flag {
+  background-position: -16px -39px;
+}
+
+div.cell.question {
+  background-position: -80px -39px;
+
 }
 
 div.cell.revealed.enemyClicked {

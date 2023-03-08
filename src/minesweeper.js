@@ -119,9 +119,23 @@ function setupBoard(board) {
         cell.addClass("c" + getBombNeighborCount(x, y, board))
       }
       cell.click(function() {
-        let id = parseInt($(this).attr("id"))
+        let id = parseInt($(this).attr("id"));
+        if ($("#" + id).hasClass('flag')) {
+          return;
+        }
         revealDFS(id % board.numCols, Math.floor(id / board.numCols), board);
         updateServer(board);
+      })
+      cell.contextmenu(function() {
+        if(cell.hasClass('flag')) {
+          cell.addClass('question');
+          cell.removeClass('flag');
+        } else if (cell.hasClass('question')) {
+          cell.removeClass('question');
+        } else {
+          cell.addClass('flag');
+        }
+        return false;
       })
       $('.border').append(cell);
     }
