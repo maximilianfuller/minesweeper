@@ -58,13 +58,16 @@ div.cell.start:not(.revealed) {
   filter:  sepia(100%);
 }
 
-div.cell.flag {
-  background-position: -16px -39px;
-}
-
 div.cell.question {
   background-position: -80px -39px;
+}
 
+div.cell.pressed {
+  background-position: 0px -23px;;
+}
+
+div.cell.flag {
+  background-position: -16px -39px;
 }
 
 div.cell.revealed.enemyClicked {

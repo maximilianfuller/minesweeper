@@ -105,6 +105,7 @@ function revealDFS(x, y, board) {
 }
 
 function setupBoard(board) {
+  let isMouseDown = false
   for (let y = 0; y < board.numRows; y++) {
     for (let x = 0; x < board.numCols; x++) {
       let cell = $('<div>', {
@@ -136,7 +137,26 @@ function setupBoard(board) {
           cell.addClass('flag');
         }
         return false;
-      })
+      });
+      cell.on('mousedown', function() {
+        isMouseDown = true;
+        cell.addClass('pressed');
+      });
+      cell.on('mouseover', function(e) {
+        if (isMouseDown) {
+          cell.addClass('pressed');
+        }
+      });
+      cell.on('mouseup', function() {
+        isMouseDown = false;
+        cell.removeClass('pressed');
+      });
+      cell.on('mouseleave', function() {
+        cell.removeClass('pressed');
+      });
+      cell.on('dragstart', function() {
+        return false;
+      });
       $('.border').append(cell);
     }
   }
