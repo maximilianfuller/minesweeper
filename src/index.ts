@@ -107,6 +107,7 @@ function handleClientUpdate(ws: any, url: string, data: any) {
 }
 
 function handleClientDisconnect(ws: any, url: string) {
+  console.log("handleClientDisconnect");
   if (games.has(url)) {
     let game = games.get(url)!
     if (game.p2) {

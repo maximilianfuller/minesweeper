@@ -21,15 +21,12 @@ webSocket.onmessage = (event) => {
     gameOn = true;
     setupBoard(board);
   }
+  updateProgressBars(board);
   if (board.gameOverMessage) {
     if(!alert(board.gameOverMessage)) {
       console.log("reload");
       window.location.reload();
     }
-  }
-  for (let i = 0; i < board.enemyClickedCells.length; i++) {
-    let id = board.enemyClickedCells[i];
-    $("#" + id).addClass("enemyClicked");
   }
 };
 
@@ -132,6 +129,30 @@ function setupBoard(board) {
   $("#" + board.start).addClass("start");
 }
 
-$(document).ready(function() {
- 
-});
+function updateProgressBars(board) {
+  let safeCellCount = board.numRows*board.numCols - board.bombs.length;
+  let enemyClickedBombsCount = 0;
+  board.enemyClickedCells.forEach(function(i){
+    if(board.bombs.includes(i)) {
+      enemyClickedBombsCount++;
+      $("#" + i).addClass("enemyClicked");
+    }
+  });
+  let enemyProgress = (board.enemyClickedCells.length - enemyClickedBombsCount)/safeCellCount;
+  $(".progress_bar.enemy").css("width", 100*enemyProgress + "%");
+
+  let youClickedSafeCellCount = 0;
+  for (let i = 0; i < board.numRows*board.numCols; i++) {
+    if(board.bombs.includes(i)) {
+      continue;
+    }
+    if ($("#" + i).hasClass("revealed")) {
+      youClickedSafeCellCount++;
+    }
+  }
+  let youProgress = youClickedSafeCellCount/safeCellCount;
+  $(".progress_bar.you").css("width", 100*youProgress + "%");
+
+}
+
+$(document).ready(function() {});
