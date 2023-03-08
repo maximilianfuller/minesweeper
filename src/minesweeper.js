@@ -23,10 +23,13 @@ webSocket.onmessage = (event) => {
   }
   updateProgressBars(board);
   if (board.gameOverMessage) {
-    if(!alert(board.gameOverMessage)) {
+    // Delay to let the UI update finish.
+    setTimeout(function() {
+      if(!alert(board.gameOverMessage)) {
       console.log("reload");
       window.location.reload();
-    }
+    }}, 10)
+    
   }
 };
 
