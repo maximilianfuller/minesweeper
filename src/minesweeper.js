@@ -22,6 +22,9 @@ webSocket.onmessage = (event) => {
     setupBoard(board);
   }
   updateProgressBars(board);
+  board.enemyClickedCells.forEach(function(i){
+    $("#" + i).addClass("enemyClicked");
+  });
   if (board.gameOverMessage) {
     // Delay to let the UI update finish.
     setTimeout(function() {
@@ -172,7 +175,6 @@ function updateProgressBars(board) {
   board.enemyClickedCells.forEach(function(i){
     if(board.bombs.includes(i)) {
       enemyClickedBombsCount++;
-      $("#" + i).addClass("enemyClicked");
     }
   });
   let enemyProgress = (board.enemyClickedCells.length - enemyClickedBombsCount)/safeCellCount;

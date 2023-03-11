@@ -100,7 +100,6 @@ function handleClientUpdate(ws: any, url: string, data: any) {
     updateClients(url);
     // Scrub game from server
     games.delete(url);
-
   } else {
     updateClients(url);
   }
