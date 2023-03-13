@@ -1,13 +1,11 @@
 {
-  "devDependencies": {
-  },
   "name": "minesweeper",
   "description": "Competitive Minesweeper!",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "ts-node ./src/index.ts",
-    "dev": "ts-node-dev --respawn ./src/index.ts ./src/minesweeper.ts"
+    "start": "ts-node ./src/server.ts",
+    "dev": "ts-node-dev --respawn ./src/server.ts ./src/minesweeper.ts"
   },
   "repository": {
     "type": "git",
@@ -30,5 +28,8 @@
     "typescript": "^4.9.5",
     "uuid": "^9.0.0",
     "ws": "^8.12.1"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.1"
   }
 }

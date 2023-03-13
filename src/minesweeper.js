@@ -1,4 +1,3 @@
-TILE_PIXEL_LENGTH = 16;
 let NEIGHBOR_RELATIVE_COORDS = [
   [-1, -1],
   [-1, 0],
@@ -28,10 +27,9 @@ webSocket.onmessage = (event) => {
   if (board.gameOverMessage) {
     // Delay to let the UI update finish.
     setTimeout(function() {
-      if(!alert(board.gameOverMessage)) {
-      console.log("reload");
+      alert(board.gameOverMessage)
       window.location.reload();
-    }}, 10)
+    }, 10)
     
   }
 };
@@ -118,8 +116,10 @@ function setupBoard(board) {
         id: board.numCols * y + x,
         class: 'cell',
       });
-      cell.css("left", TILE_PIXEL_LENGTH * x);
-      cell.css("top", TILE_PIXEL_LENGTH * y);
+      $('.border').append(cell);
+      tilePixelLength = cell.css("width").substring(0, cell.css("width").length-2);
+      cell.css("left", tilePixelLength * x);
+      cell.css("top", tilePixelLength * y);
       if (isBomb(x, y, board)) {
         cell.addClass("bomb");
       } else {
@@ -163,7 +163,6 @@ function setupBoard(board) {
       cell.on('dragstart', function() {
         return false;
       });
-      $('.border').append(cell);
     }
   }
   $("#" + board.start).addClass("start");
