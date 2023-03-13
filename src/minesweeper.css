@@ -1,0 +1,108 @@
+h1 {
+  color: navy;
+}
+
+p {
+  font-size: 8;
+}
+
+div.progress_bar_container {
+  width: 200px;
+  height: 20px;
+  border: 3px solid;
+}
+
+div.progress_bar_container.you {
+  color: darkblue;
+}
+div.progress_bar_container.enemy {
+  color: darkred;
+}
+
+div.progress_bar.you {
+  left: 0px;
+  width: 0%;
+  height:  100%;
+  background-color: darkblue;
+}
+div.progress_bar.enemy {
+  right: 0px;
+  width: 0%;
+  height:  100%;
+  background-color: darkred;
+}
+
+div.border {
+  width: 144px;
+  height: 144px;
+  position: relative;
+  border: 1px solid;
+  border-color: #f1efe2 #716f64 #716f64 #f1efe2;
+}
+
+div.cell {
+  width: 16;
+  height: 16px;
+  line-height: 16spx; 
+  position: absolute;
+  font-size: 0;
+
+  background-image: url("minesweeper.png");
+  background-repeat: no-repeat;
+  background-position: 0px -39px;
+}
+
+div.cell.start:not(.revealed) {
+  filter:  sepia(100%);
+}
+
+div.cell.question {
+  background-position: -80px -39px;
+}
+
+div.cell.pressed {
+  background-position: 0px -23px;;
+}
+
+div.cell.flag {
+  background-position: -16px -39px;
+}
+
+div.cell.revealed.enemyClicked {
+  filter:  sepia(50%);
+}
+
+div.cell.revealed.bomb {
+  background-position: -32px -39px;
+}
+
+div.cell.revealed.c0 {
+    background-position: 0px -23px;
+}
+div.cell.revealed.c1 {
+    background-position: -16px -23px;
+}
+div.cell.revealed.c2 {
+    background-position: -32px -23px;
+}
+div.cell.revealed.c3 {
+    background-position: -48px -23px;
+}
+div.cell.revealed.c4 {
+    background-position: -64px -23px;
+}
+div.cell.revealed.c5 {
+    background-position: -80px -23px;
+}
+div.cell.revealed.c6 {
+    background-position: -96px -23px;
+}
+div.cell.revealed.c7 {
+    background-position: -112px -23px;
+}
+div.cell.revealed.c8 {
+    background-position: -128px -23px;
+}
+div.cell.revealed.c9 {
+    background-position: -144px -23px;
+}

@@ -1,0 +1,4 @@
+BUGS
+Refresh doesn't always trigger win screen for other player
+
+FEATURES
