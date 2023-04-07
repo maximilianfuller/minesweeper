@@ -2,3 +2,64 @@ BUGS
 Refresh doesn't always trigger win screen for other player
 
 FEATURES
+Spectator mode
+Display in progress games on home screen
+have bots automatically play each other
+
+
+REFACTORS
+
+Enum CellType {
+    UNKNOWN
+    BOMB
+    ZERO
+    ONE
+    TWO
+    THREE
+    FOUR
+    FIVE
+    SIX
+    SEVEN
+    EIGHT
+}
+
+class Cell {
+    Cell(int x, int y, Enum CellType)
+}
+
+class Board
+ - numCols
+ - numRows
+ - numBombs
+ - start
+}
+
+abstract class Player
+ - Player(Gameinfo gameInfo)
+ - setOnClick
+ - cellsRevealed(List[Cell], float newProgress)
+ - enemyCellsRevealed(List[Cell], float newEnemyProgress)
+ - gameWon()
+ - gameLost()
+
+abstract class Spectator
+ - Spectator(Gameinfo gameInfo)
+ - cellsRevealed(pid, List[Cell])
+ - gameWon(pid)
+
+class GameRunner(Board, List[Player], List[Spectator]) {
+    GameRunner() {
+        game = Game()
+        gameInfo = ...
+        p1 = Player(gameInfo, getP1OnClick)
+        p2 = Player(gameInfo, getP2Onclick)
+    }
+
+
+    getOnClickForPlayerIndex(int index) {
+        handleCellsRevealed()
+        handleGameMaybeWon()
+    }
+
+
+}

@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	$('div').click(function(e) {
+	$('button').click(function(e) {
 		$.post("create", {"config": $(this).html()}, function( data ) {
 			location.assign(data);
 		});  
