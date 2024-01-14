@@ -16,6 +16,10 @@ The backend is a NodeJS server running TypeScript and Express.
 * For deploying the server:
   * [heroku cli](https://devcenter.heroku.com/articles/heroku-cli)
 
+#### Run Tests
+```
+$ npm test
+```
 #### Local Deployment
 **TODO**: Setup the `heroku local` deploy with hot reloads so we don't need two local deploy options.
 
@@ -29,14 +33,14 @@ To access/deploy the heroku app, you must be added as a collaborator in heroku. 
 
 The app is deployed by pushing changes to a `heroku` remote git repo that runs on a heroku server. Add the git remote repo locally:
 ```
-$ git remote add heroku https://git.heroku.com/mine-sweeper.git
+$ git remote add heroku https://git.heroku.com/minesweeperduel.git
 ```
 
 Verify that the remote has been added properly:
 ```
 $ git remote -v
-heroku	https://git.heroku.com/mine-sweeper.git (fetch)
-heroku	https://git.heroku.com/mine-sweeper.git (push)
+heroku	https://git.heroku.com/minesweeperduel.git (fetch)
+heroku	https://git.heroku.com/minesweeperduel.git (push)
 origin	git@github.com:maximilianfuller/minesweeper.git (fetch)
 origin	git@github.com:maximilianfuller/minesweeper.git (push)
 ```
@@ -46,7 +50,7 @@ Push your local copy of the `main` branch to the remote origin to deploy:
 $ git push heroku main
 ```
 
-The updated app should now be running at: https://mine-sweeper.herokuapp.com/
+The updated app should now be running at: https://minesweeperduel.herokuapp.com/
 
 #### Environment Variables
-Environment variables are made available to the deployed heroku dynos by setting "Config Vars" in the [application settings](https://dashboard.heroku.com/apps/mine-sweeper/settings). Secret values should be added here, never commited to the codebase.
+Environment variables are made available to the deployed heroku dynos by setting "Config Vars" in the [application settings](https://dashboard.heroku.com/apps/minesweeperduel/settings). Secret values should be added here, never commited to the codebase.

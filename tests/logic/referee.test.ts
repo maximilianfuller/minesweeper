@@ -1,7 +1,7 @@
 import { Referee } from '../../src/logic/referee';
 import { Board } from '../../src/logic/board';
 import { Cell, CellType } from '../../src/logic/cell';
-import { BasePlayer } from '../../src/logic/player';
+import { BasePlayer, StartInfo } from '../../src/logic/player';
 
 
 
@@ -17,6 +17,22 @@ describe('testing Referee class', () => {
     }();
     let r = new Referee(b, [p]);
     p.select(0, 0);
+    expect(callCount).toBe(1);
+  });
+
+  test('Verify Start Position', () => {
+    let b = new Board(10, 10, 10);
+    let callCount = 0
+    let p = new class extends BasePlayer {
+      notifyStart(startInfo: StartInfo): void {
+        expect(startInfo.boardNumCols).toBe(10);
+        expect(startInfo.boardNumRows).toBe(10);
+        expect(startInfo.numBombs).toBe(10);
+        expect(b.get(startInfo.startX, startInfo.startY).cellType).toBe(CellType.ZERO);
+        callCount++;
+      }
+    }();
+    let r = new Referee(b, [p]);
     expect(callCount).toBe(1);
   });
 

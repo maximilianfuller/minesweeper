@@ -49,7 +49,10 @@ export class Board {
         let zeroCells = []
         for (let y = 0; y < numRows; y++) {
             for (let x = 0; x < numCols; x++) {
-                if(!this.getNeighborCoords(x, y).some((c) => this.isBomb(c[0], c[1]))) {
+                if(
+                    !this.isBomb(x, y) && 
+                    !this.getNeighborCoords(x, y).some((c) => this.isBomb(c[0], c[1]))
+                ) {
                     zeroCells.push(y*this.numRows+x);
                 }
             }

@@ -41,4 +41,12 @@ describe('testing Board class', () => {
     expect(b.get(1, 0)).toStrictEqual(new Cell(1, 0, CellType.ONE));
     expect(b.get(2, 2)).toStrictEqual(new Cell(2, 2, CellType.ZERO));
   });
+  test('Test Start', () => {
+    for(let i = 0; i < 1000; i++) {
+      let b = new Board(10, 10, 10);
+      let x = b.startPosition%b.numCols;
+      let y = Math.floor(b.startPosition/b.numRows);
+      expect(b.get(x, y).cellType).toBe(CellType.ZERO);
+    }
+  });
 });
