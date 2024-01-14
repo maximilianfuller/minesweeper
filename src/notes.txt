@@ -1,7 +1,9 @@
+
 BUGS
 Refresh doesn't always trigger win screen for other player
 
-FEATURES
+TODO FEATURES
+Server driven logic (to ensure cheating is not trivially easy. https://minesweeper.online/ does this as well.)
 Spectator mode
 Display in progress games on home screen
 have bots automatically play each other
@@ -22,6 +24,7 @@ Enum CellType {
     SEVEN
     EIGHT
 }
+
 
 class Cell {
     Cell(int x, int y, Enum CellType)

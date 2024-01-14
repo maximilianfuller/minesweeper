@@ -19,7 +19,7 @@ The backend is a NodeJS server running TypeScript and Express.
 #### Local Deployment
 **TODO**: Setup the `heroku local` deploy with hot reloads so we don't need two local deploy options.
 
-To run a local version of the app that reloads when files are changed run: `npm dev`
+To run a local version of the app that reloads when files are changed run: `npm run dev`
 
 To run local version of the app deployed that mimics the heroku deployment run: `heroku local`
 * Add local environment variables to `.env` in the root directory. This file is gitignored and is appropriate for storing secrets.
