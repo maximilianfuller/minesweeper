@@ -41,7 +41,26 @@ div.border {
   width: 144px;
   height: 144px;
   position: relative;
-  border: 1px solid;
+  float:left;
+  padding: 20px;
+  border-color: #f1efe2 #716f64 #716f64 #f1efe2;
+}
+
+div.border0 {
+  width: 144px;
+  height: 144px;
+  position: relative;
+  float:left;
+  padding: 20px;
+  border-color: #f1efe2 #716f64 #716f64 #f1efe2;
+}
+
+div.border1 {
+  width: 144px;
+  height: 144px;
+  position: relative;
+  float:left;
+  padding: 20px;
   border-color: #f1efe2 #716f64 #716f64 #f1efe2;
 }
 

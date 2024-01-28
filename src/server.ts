@@ -1,22 +1,15 @@
 import express, {Request,Response,Application} from 'express';
+import mustacheExpress from 'mustache-express';
+import mustache from 'mustache-express';
+// import mustache from 'mustache'
 var bodyParser = require('body-parser')
 import { Server } from 'ws';
 import { v4 as uuidv4 } from 'uuid';
 import { HumanPlayer } from './logic/human_player';
 import { Referee } from './logic/referee';
 import { Board } from './logic/board';
-
-let NEIGHBOR_RELATIVE_COORDS = [
-  [-1, -1],
-  [-1, 0],
-  [-1, 1],
-  [0, -1],
-  [0, 1],
-  [1, -1],
-  [1, 0],
-  [1, 1],
-  [0, 0] 
-];
+import { HumanSpectator } from './logic/human_spectator';
+import { DumbPlayer } from './logic/bot_players/dumb_player';
 
 // [NUM_ROWS, NUM_COLS, NUM_BOMBS]
 let CONFIG : any = {
@@ -28,15 +21,32 @@ let CONFIG : any = {
 const app:Application = express();
 app.use(express.static('dist'));
 app.use(express.static('src'));
-app.use(bodyParser.urlencoded({ extended: false }))
+app.engine('mustache', mustacheExpress());
+
+
+app.set('views', `${__dirname}/views`);
+app.set('view engine', 'mustache');
+
+
+
+// const VIEWS_PATH = path.join(__dirname, '/views');
+
+
+app.engine('mst', mustache('./views', '.mst'));
+
+
+
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 const PORT = process.env.PORT || 8000;
-
-var jsonParser = bodyParser.json()
 
 // Setup express server
 app.get("/game/:id", (req:Request, res:Response):void => {
   res.sendFile("minesweeper.html", {root: __dirname })
+});
+
+app.get("/watch/:id", (req:Request, res:Response):void => {
+  res.sendFile("spectate.html", {root: __dirname })
 });
 
 app.post("/create", (req:any, res:any):void => {
@@ -48,8 +58,22 @@ app.post("/create", (req:any, res:any):void => {
   res.send(url);
 });
 
+let games = new Map<string, any>()
+
+games.set("/game/bot_game", {});
+let board = createBoard([10, 10, 10]);
+let p1 = new DumbPlayer();
+let p2 = new DumbPlayer();
+games.get("/game/bot_game")!.board = board;
+games.get("/game/bot_game")!.p1 = p1;
+games.get("/game/bot_game")!.p2 = p2;
+games.get("/game/bot_game")!.referee = new Referee(board, [p1, p2]);
+
+
 app.get("", (req:Request, res:Response):void => {
-  res.sendFile("index.html", {root: __dirname })
+  let gamesToSend = Array.from(games.keys()).map(key =>  { return {gameId: key};});
+  console.log(gamesToSend);
+  res.render("index.mst", {games: gamesToSend})
 });
 
 const server = app.listen(PORT, ():void => {
@@ -58,7 +82,6 @@ const server = app.listen(PORT, ():void => {
 
 const wss = new Server({server});
 
-let games = new Map<string, any>()
 
 function createBoard(config: any) {
   let numCols = config[0];
@@ -67,7 +90,7 @@ function createBoard(config: any) {
   return new Board(numCols, numRows, numBombs);
 }
 
-function handleClientCreate(ws: any, url: string) {
+function handleClientCreate(ws: any, url: string) {  
   if(!games.get(url)) {
     games.set(url, {});
   }
@@ -81,10 +104,15 @@ function handleClientCreate(ws: any, url: string) {
     game.p2 = new HumanPlayer(ws);
     console.log('p2 has joined the game at ' + url);
     if (!game.board) {
-      let config = CONFIG.beginner
+      let config = CONFIG.beginner;
       game.board = createBoard(config);
     }
     game.referee = new Referee(game.board, [game.p1, game.p2]);
+  } else {
+    // spectator
+    console.log("spectator is watching game.")
+    let s = new HumanSpectator(ws);
+    game.referee.addSpectator(s);
   }
 }
 

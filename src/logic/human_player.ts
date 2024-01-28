@@ -25,8 +25,8 @@ export class HumanPlayer extends BasePlayer{
     ) {
         let start = this.startInfo!.boardNumCols*this.startInfo!.startY + this.startInfo!.startX;
         let totalProgress = this.startInfo!.boardNumCols * this.startInfo!.boardNumRows - this.startInfo!.numBombs
-        let data = {
-            "bombs": [0, 1, 2], 
+        let data = [{
+            "spectator": false,
             "start": start, 
             "numRows": this.startInfo!.boardNumRows,
             "numCols": this.startInfo!.boardNumCols,
@@ -36,7 +36,7 @@ export class HumanPlayer extends BasePlayer{
             "enemyProgress": this.enemyProgress,
             "totalProgress": totalProgress,
             "gameOverMessage": gameOverMessage,
-        }
+        }]
         this.ws.send(JSON.stringify(data));
     }
 

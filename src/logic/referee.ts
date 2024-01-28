@@ -1,6 +1,7 @@
 import { Board } from './board';
 import { Player, StartInfo } from './player';
 import { Cell, CellType } from './cell';
+import { Spectator } from './spectator';
 
 
 
@@ -8,6 +9,8 @@ export class Referee {
     private board: Board;
 
     private players: Array<Player>;
+
+    private spectators: Array<Spectator> = [];
 
     // Keeps track of what each player has already seen. Stores
     // x, y coords as a single value equal to the 'reading' position
@@ -21,22 +24,20 @@ export class Referee {
 		this.players = players;
         this.playerVisited = players.map(_ => new Set<number>());
         
-        let startInfo = new StartInfo(
-            this.board.numCols, 
-            this.board.numRows, 
-            this.board.startPosition%this.board.numCols,
-            Math.floor(this.board.startPosition/this.board.numRows),
-            this.board.bombs.size,
-        );
-        
         for (let i = 0; i < players.length; i++) {
             players[i].setSelectCallback((x, y) => this.handlePlayerSelect(x, y, i));
-            players[i].notifyStart(startInfo);
+            players[i].notifyStart(this.getStartInfo());
         }
     }
 
     public gameOver(): Boolean {
         return this.isGameOver;
+    }
+
+    public addSpectator(spectator: Spectator): void {
+        this.spectators.push(spectator);
+        spectator.notifyStart(this.getStartInfo())
+        spectator.notifyGameUpdate(this.getGameState())
     }
 
     handlePlayerSelect(x: number, y: number, playerIndex: number): void {
@@ -47,12 +48,14 @@ export class Referee {
             return !this.playerVisited[playerIndex].has(i);
         })
         let newCells = newPositions.map(i => {
-            let x = i%this.board.numCols;
-            let y = Math.floor(i/this.board.numRows);
-            return this.board.get(x, y);
+            let c = this.posToCoords(i)
+            return this.board.get(c[0], c[1]);
         });
         visited.forEach(i => this.playerVisited[playerIndex].add(i));
         this.players[playerIndex].notifyGameUpdate(newCells);
+        for(let s of this.spectators) {
+            s.notifyGameUpdate(this.getGameState())
+        }
         
         // Enemy notifications only really make sense in two player
         // Right now we just pick an arbitrary player to notify
@@ -67,6 +70,9 @@ export class Referee {
             for (let i = 0; i < this.players.length; i++) {
                 if(i != playerIndex) {
                     this.players[i].notifyWin();
+                    for(let s of this.spectators) {
+                        s.notifyWinner(i)
+                    }
                 }
             }
             return;
@@ -75,6 +81,9 @@ export class Referee {
         if (this.playerVisited[playerIndex].size >= totalCells-this.board.bombs.size) {
             this.isGameOver = true;
             this.players[playerIndex].notifyWin();
+            for(let s of this.spectators) {
+                s.notifyWinner(playerIndex)
+            }
             for (let i = 0; i < this.players.length; i++) {
                 if(i != playerIndex) {
                     this.players[i].notifyLoss();
@@ -93,5 +102,32 @@ export class Referee {
         }
 
         return visited;
+    }
+
+    private getStartInfo(): StartInfo {
+        return new StartInfo(
+            this.board.numCols, 
+            this.board.numRows, 
+            this.board.startPosition%this.board.numCols,
+            Math.floor(this.board.startPosition/this.board.numRows),
+            this.board.bombs.size,
+        );
+    }
+
+    private getGameState(): Array<Array<Cell>> {
+        return this.playerVisited.map(v => {
+            return Array.from(v).map(i => {
+                let c = this.posToCoords(i)
+                return this.board.get(c[0], c[1])
+            })
+        })
+    }
+
+    // Convert position in grid (single int, 'reading' direction)
+
+    private posToCoords(i: number): Array<number> {
+        let x = i%this.board.numCols;
+        let y = Math.floor(i/this.board.numRows);
+        return [x, y]
     }
 }
