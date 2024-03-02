@@ -60,7 +60,7 @@ function addBot() {
   games.set(url, {});
   let board = createBoard([10, 10, 10]);
   let p1 = new FlagBot();
-  let p2 = new RandomBot();
+  let p2 = new SimpleSearchBot();
   games.get(url)!.board = board;
   games.get(url)!.p1 = p1;
   games.get(url)!.p2 = p2;
@@ -69,10 +69,11 @@ function addBot() {
 
 function repeatedlyAddBot() {
   addBot();
-  setTimeout(() => { repeatedlyAddBot() } , 1000);
+  setTimeout(() => { repeatedlyAddBot() } , 100);
 }
 
 repeatedlyAddBot();
+// addBot();
 
 app.get("", (req:Request, res:Response):void => {
   let gamesToSend = Array.from(games.keys()).map(key =>  { return {gameId: key};});
@@ -112,7 +113,6 @@ function handleClientCreate(ws: any, url: string) {
     game.referee = new Referee(game.board, [game.p1, game.p2]);
   } else {
     // spectator
-    console.log("spectator is watching game.")
     let s = new HumanSpectator(ws);
     game.referee.addSpectator(s);
   }
@@ -121,6 +121,7 @@ function handleClientCreate(ws: any, url: string) {
 function handleClientUpdate(ws: any, url: string, data: any) {
   let game = games.get(url)!;
   let coord = JSON.parse(data);
+  if (!game.has(ws.id)) return;
   game[ws.id].select(coord[0], coord[1]);
   if (game.referee.gameOver()) {
     // Scrub game from server
@@ -129,7 +130,6 @@ function handleClientUpdate(ws: any, url: string, data: any) {
 }
 
 function handleClientDisconnect(ws: any, url: string) {
-  console.log("handleClientDisconnect " + ws.id);
   if (games.has(url)) {
     let game = games.get(url)!
     if (!game.referee) {

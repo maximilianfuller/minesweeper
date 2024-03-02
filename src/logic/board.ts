@@ -9,7 +9,7 @@ export class Board {
 
     public readonly startPosition: number;
 
-    private static NEIGHBOR_RELATIVE_COORDS = [
+    public static NEIGHBOR_RELATIVE_COORDS = [
         [-1, -1],
         [-1, 0],
         [-1, 1],
