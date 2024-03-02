@@ -9,7 +9,11 @@ import { HumanPlayer } from './logic/human_player';
 import { Referee } from './logic/referee';
 import { Board } from './logic/board';
 import { HumanSpectator } from './logic/human_spectator';
-import { DumbPlayer } from './logic/bot_players/dumb_player';
+import { RandomBot } from './logic/bot_players/random_bot';
+import { SimpleSearchBot } from './logic/bot_players/simple_search_bot';
+import { FlagBot } from './logic/bot_players/flag_bot';
+
+
 
 // [NUM_ROWS, NUM_COLS, NUM_BOMBS]
 let CONFIG : any = {
@@ -26,16 +30,7 @@ app.engine('mustache', mustacheExpress());
 
 app.set('views', `${__dirname}/views`);
 app.set('view engine', 'mustache');
-
-
-
-// const VIEWS_PATH = path.join(__dirname, '/views');
-
-
 app.engine('mst', mustache('./views', '.mst'));
-
-
-
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 const PORT = process.env.PORT || 8000;
@@ -59,20 +54,28 @@ app.post("/create", (req:any, res:any):void => {
 });
 
 let games = new Map<string, any>()
+var botCount = 0
+function addBot() {
+  let  url = "/game/bot_" + botCount++
+  games.set(url, {});
+  let board = createBoard([10, 10, 10]);
+  let p1 = new FlagBot();
+  let p2 = new RandomBot();
+  games.get(url)!.board = board;
+  games.get(url)!.p1 = p1;
+  games.get(url)!.p2 = p2;
+  games.get(url)!.referee = new Referee(board, [p1, p2], () => {games.delete(url)});
+}
 
-games.set("/game/bot_game", {});
-let board = createBoard([10, 10, 10]);
-let p1 = new DumbPlayer();
-let p2 = new DumbPlayer();
-games.get("/game/bot_game")!.board = board;
-games.get("/game/bot_game")!.p1 = p1;
-games.get("/game/bot_game")!.p2 = p2;
-games.get("/game/bot_game")!.referee = new Referee(board, [p1, p2]);
+function repeatedlyAddBot() {
+  addBot();
+  setTimeout(() => { repeatedlyAddBot() } , 1000);
+}
 
+repeatedlyAddBot();
 
 app.get("", (req:Request, res:Response):void => {
   let gamesToSend = Array.from(games.keys()).map(key =>  { return {gameId: key};});
-  console.log(gamesToSend);
   res.render("index.mst", {games: gamesToSend})
 });
 
@@ -81,7 +84,6 @@ const server = app.listen(PORT, ():void => {
 });
 
 const wss = new Server({server});
-
 
 function createBoard(config: any) {
   let numCols = config[0];
@@ -136,10 +138,11 @@ function handleClientDisconnect(ws: any, url: string) {
     }
     if (ws.id == "p1") {
       game.p2.notifyWin();
-    } else {
+      games.delete(url);
+    } else if (ws.id == "p2") {
       game.p1.notifyWin();
+      games.delete(url);
     }
-    games.delete(url);
   }
 }
 

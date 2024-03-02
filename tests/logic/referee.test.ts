@@ -116,7 +116,7 @@ describe('testing Referee class', () => {
     let b = new Board(3, 3, 1, new Set([0]));
     let callCount = 0
     let s = new class extends BaseSpectator {
-      notifyGameUpdate(playerAllCells: Array<Array<Cell>>): void {
+      notifyGameUpdate(playerAllCells: Cell[][]): void {
         callCount++;
         if (playerAllCells[0].length == 0) {
           // The first call notifies an empty board. Let's ignore this.
@@ -145,7 +145,7 @@ describe('testing Referee class', () => {
     expect(callCount).toBe(2);
   });
 
-  test('Spectator Game over from finish', () => {
+  test('Spectator gets game over from finish', () => {
     let b = new Board(3, 3, 1, new Set([0]));
     let p1 = new BasePlayer();
     let p2 = new BasePlayer();
@@ -162,7 +162,7 @@ describe('testing Referee class', () => {
     expect(callCount).toBe(1);
   });  
 
-  test('Spectator Game over from bomb', () => {
+  test('Spectator gets game over from bomb', () => {
     let b = new Board(3, 3, 1, new Set([0]));
     let p1 = new BasePlayer();
     let p2 = new BasePlayer();
@@ -179,7 +179,7 @@ describe('testing Referee class', () => {
     expect(callCount).toBe(1);
   });
 
-  test('Spectator StartInfo sent', () => {
+  test('Spectator sent StartInfo', () => {
     let s = new class extends BaseSpectator {
       notifyStart(startInfo: StartInfo): void {
         expect(startInfo.boardNumCols).toBe(10);
@@ -196,5 +196,30 @@ describe('testing Referee class', () => {
     let callCount = 0;
     r.addSpectator(s)
     expect(callCount).toBe(1);
+  });
+
+  test('Spectator sees that a player marks a flag', () => {
+    let b = new Board(3, 3, 1, new Set([0]));
+    let callCount = 0
+    let expectedCells = [
+      new Cell(2,2,CellType.FLAG),
+    ];
+    let s = new class extends BaseSpectator {
+      notifyGameUpdate(playerAllCells: Cell[][]): void {
+        callCount++;
+        if (playerAllCells[0].length == 0) {
+          // The first call notifies an empty board. Let's ignore this.
+          return;
+        }
+        let actual = playerAllCells[0].map(c => JSON.stringify(c)).sort();
+        let expected = expectedCells.map(c => JSON.stringify(c)).sort();
+        expect(actual).toStrictEqual(expected);
+      }
+    }();
+    let p = new BasePlayer();
+    let r = new Referee(b, [p]);
+    r.addSpectator(s);
+    p.markFlag(2, 2);
+    expect(callCount).toBe(2);
   });
 });

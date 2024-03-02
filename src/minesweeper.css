@@ -1,3 +1,7 @@
+a {
+  text-decoration: none;
+}
+
 body {
     background-image: url("ms-background.png");
     background-repeat: repeat;

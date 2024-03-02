@@ -10,6 +10,7 @@ export enum CellType {
     EIGHT,
     BOMB,
     UNKNOWN,
+    FLAG,
 }
 
 export class Cell {
@@ -22,12 +23,4 @@ export class Cell {
 		this.y = y;
 		this.cellType = cellType;
 	}
-
-    // public equals(obj: Cell) {
-    //     return this.x == obj.x && this.y == obj.y && this.cellType == obj.cellType;
-    // }
-    
-    // public hashCode(obj: MyBean) {
-    //     return obj.id
-    // }
 }

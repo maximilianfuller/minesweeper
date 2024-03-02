@@ -6,11 +6,11 @@ export abstract class Spectator {
     abstract notifyWinner(playerIndex: number): void;
     // Unlike players, we send the entire state on every update.
     // TBD if there are performance implications here.
-    abstract notifyGameUpdate(playersAllCells: Array<Array<Cell>>): void;
+    abstract notifyGameUpdate(playersAllCells: Cell[][], playersFlags: Cell[][]): void;
 }
 
 export class BaseSpectator extends Spectator {
     notifyStart(startInfo: StartInfo): void {}
     notifyWinner(playerIndex: number): void {}
-    notifyGameUpdate(playersAllCells: Array<Array<Cell>>) {}
+    notifyGameUpdate(playersAllCells: Cell[][]) {}
 }

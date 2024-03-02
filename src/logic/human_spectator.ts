@@ -3,10 +3,10 @@ import { Spectator } from './spectator';
 import { Cell } from './cell';
 
 import WebSocket from 'ws';
+import { assert } from 'console';
 
 
 export class HumanSpectator extends Spectator{
-
     private ws: WebSocket;
     private startInfo?: StartInfo;
 
@@ -23,20 +23,22 @@ export class HumanSpectator extends Spectator{
         // TODO
     }
     
-    notifyGameUpdate(playersAllCells: Array<Array<Cell>>): void {
+    notifyGameUpdate(playersAllCells: Cell[][]): void {
         this.updateClient(playersAllCells);
     }
 
-    private updateClient(playerAllCells: Array<Array<Cell>>) {
+    private updateClient(playerAllCells: Cell[][]) {
         let start = this.startInfo!.boardNumCols*this.startInfo!.startY + this.startInfo!.startX;
-        let data = playerAllCells.map(allCells => {
-        return {
-            "spectator": true,
-            "start": start, 
-            "numRows": this.startInfo!.boardNumRows,
-            "numCols": this.startInfo!.boardNumCols,
-            "newCells": allCells,
-        }});
+        let data = []
+        for (let i = 0; i < playerAllCells.length; i++) {
+            data.push({
+                "spectator": true,
+                "start": start, 
+                "numRows": this.startInfo!.boardNumRows,
+                "numCols": this.startInfo!.boardNumCols,
+                "newCells": playerAllCells[i],
+            });
+        }
         this.ws.send(JSON.stringify(data));
     }
 

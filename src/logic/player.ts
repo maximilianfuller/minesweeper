@@ -24,6 +24,7 @@ export class StartInfo {
 
 export abstract class Player {
     abstract setSelectCallback(callback: (x: number, y: number) => void): void;
+    abstract setMarkFlagCallback(callback: (x: number, y: number) => void): void;
     abstract notifyStart(startInfo: StartInfo):void;
     abstract notifyWin(): void;
     abstract notifyLoss(): void;
@@ -34,23 +35,32 @@ export abstract class Player {
 
 export class BasePlayer extends Player{
     selectCallback: (x: number, y: number) => void = (x, y) => {};
+    markFlagCallback: (x: number, y: number) => void = (x, y) => {};
 
     setSelectCallback(callback: (x: number, y: number) => void): void {
-        this.selectCallback = callback
+        this.selectCallback = callback;
     }
 
-    notifyStart(startInfo: StartInfo):void {}
+    setMarkFlagCallback(callback: (x: number, y: number) => void): void {
+        this.markFlagCallback = callback;
+    }
 
-    notifyWin(): void {}
+    notifyStart(startInfo: StartInfo):void {};
 
-    notifyLoss(): void {}
+    notifyWin(): void {};
 
-    notifyGameUpdate(newCells: Cell[]): void {}
+    notifyLoss(): void {};
+
+    notifyGameUpdate(newCells: Cell[]): void {};
 
     notifyEnemyGameUpdate(newCells: Array<Cell>) {};
     
     // select a cell
     select(x: number, y: number) {
-        this.selectCallback(x, y)
+        this.selectCallback(x, y);
+    }
+
+    markFlag(x: number, y: number) {
+        this.markFlagCallback(x, y);
     }
 }

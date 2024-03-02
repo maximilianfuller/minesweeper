@@ -50,6 +50,8 @@ webSocket.onmessage = (event) => {
       cell.addClass("revealed");
       if (c.cellType == 9) {
         cell.addClass("bomb")
+      } else if (c.cellType == 11) {
+        cell.addClass("flag")
       } else {
         cell.addClass("c" + c.cellType)
       }
@@ -62,6 +64,8 @@ webSocket.onmessage = (event) => {
       cell.addClass("revealed");
       if (c.cellType == 9) {
         cell.addClass("bomb")
+      } else if (c.cellType == 11) {
+        cell.addClass("flag")
       } else {
         cell.addClass("c" + c.cellType)
       }

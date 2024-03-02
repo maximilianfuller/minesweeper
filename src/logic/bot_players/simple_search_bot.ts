@@ -4,31 +4,39 @@ import { Cell } from '../cell';
 import WebSocket from 'ws';
 
 
-export class DumbPlayer extends BasePlayer{
+export class SimpleSearchBot extends BasePlayer{
 
     private startInfo?: StartInfo;
     private gameOver: boolean = false;
 
-    private makeRandomMove(): void {
+    private makeRepeatedRandomMoves(): void {
         let x = Math.floor(Math.random()*this.startInfo!.boardNumCols);
         let y = Math.floor(Math.random()*this.startInfo!.boardNumRows);
         this.select(x, y);
-        setTimeout(() => { this.makeRandomMove() } , 10000);
+        setTimeout(() => { this.makeRepeatedRandomMoves() } , 1000);
     }
 
+    private makeSafeMove(): void {
+        
+    }
+
+    notifyGameUpdate(newCells: Cell[]): void {
+        // newCells.map()
+    }
+
+
+
     notifyStart(startInfo: StartInfo): void {
-        console.log(startInfo);
         this.startInfo = startInfo;
-        this.makeRandomMove();
+        this.select(startInfo.startX, startInfo.startY);
+        this.makeRepeatedRandomMoves();
     }
 
     notifyWin(): void {
-        console.log("DUMB BOT Wins!")
-        this.gameOver = true;
+       this.gameOver = true;
     }
 
     notifyLoss(): void {
-        console.log("DUMB BOT Loses!")
         this.gameOver = true;
     }
 
