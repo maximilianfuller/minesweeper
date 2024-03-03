@@ -2,8 +2,6 @@ import { BasePlayer, StartInfo} from '../player';
 import { Cell, CellType } from '../cell';
 import { Board } from '../board'
 
-import WebSocket from 'ws';
-import { TypeFlags } from 'typescript';
 import { assert } from 'console';
 
 /**
@@ -15,18 +13,29 @@ export class SimpleSearchBot extends BasePlayer{
     private isGameOver: boolean = false;
 
     // board state, updated when new information is learned, or when flags are placed.
-    private board: Map<number, CellType> = new Map<number, CellType>();
+    private board: CellType[][] = [];
+
+    public constructor() {
+        super();
+    }
 
     notifyStart(startInfo: StartInfo): void {
         this.startInfo = startInfo;
+        for (let x = 0; x < startInfo.boardNumCols; x++) {
+            let col: CellType[] = []
+            for (let y = 0; y < startInfo.boardNumRows; y++) {
+                col.push(CellType.UNKNOWN);
+            }
+            this.board.push(col);
+        }
         this.select(startInfo.startX, startInfo.startY);
         this.makeRepeatedMoves();
     }
    
     notifyGameUpdate(newCells: Cell[]): void {
         newCells.forEach(c => {
-            this.board.set(this.coordsToPos(c.x, c.y), c.cellType);
-            assert(c.cellType!=CellType.BOMB, "SimpleBot can't click on bombs")
+            this.board[c.x][c.y] = c.cellType;
+            assert(c.cellType != CellType.BOMB, "SimpleBot can't click on bombs")
         });
     }
 
@@ -34,48 +43,42 @@ export class SimpleSearchBot extends BasePlayer{
     // unknown squares, and find 'freebies' or squares that can be clicked on 
     // safely, or marked as bombs.
     private makeMove(): void {
-        let numSquares = this.startInfo!.boardNumCols* this.startInfo!.boardNumRows;
-        let fringePositions = [...Array(numSquares).keys()].filter(p => {
-            return this.board.has(p) &&
-                this.board.get(p) != CellType.FLAG &&
-                this.getNeighbors(p).map(n => this.board.has(n)).includes(false);
-        });
-        for (let i = 0; i < fringePositions.length; i++) {
-            let p = fringePositions[i];
-            if (!this.getNeighbors(p).map(n => this.board.has(n)).includes(false)) {
-                console.log(this.board)
-                console.log("WTF2")
-            }
+        let fringeCoords: number[][] = []
+        for (let x = 0; x < this.startInfo!.boardNumCols; x++) {
+            for (let y = 0; y < this.startInfo!.boardNumRows; y++) {
+                if([CellType.UNKNOWN, CellType.FLAG].includes(this.board[x][y])) {
+                    continue;
+                }
+                if (!this.getNeighbors(x, y).map(c => this.board[c[0]][c[1]]).includes(CellType.UNKNOWN))  {
+                    continue;
+                }
+                fringeCoords.push([x, y])
 
-            let num = Number(this.board.get(p));
-            let numBombNeighbors = this.getNeighbors(p)
-                .map(n => this.board.get(n) == CellType.FLAG ? Number(1) : Number(0))
+            }
+        }
+        for (let i = 0; i < fringeCoords.length; i++) {
+            let x = fringeCoords[i][0];
+            let y = fringeCoords[i][1];
+
+            let num = Number(this.board[x][y]);
+            let numBombNeighbors = this.getNeighbors(x, y)
+                .map(c => this.board[c[0]][c[1]] == CellType.FLAG ? Number(1) : Number(0))
                 .reduce((sum, current) => sum + current, 0);
             let remainingBombs = num - numBombNeighbors;
-            let unknownNeighbors = this.getNeighbors(p).filter(n => !this.board.has(n))
+            let unknownNeighbors = this.getNeighbors(x, y).filter(c => this.board[c[0]][c[1]] == CellType.UNKNOWN)
             assert(unknownNeighbors.length > 0, "Missing unknown neighbors.");
 
-            let c = this.posToCoords(unknownNeighbors[0]);
+            let c = unknownNeighbors[0];
             if (remainingBombs == 0) {
                 this.select(c[0], c[1]);
                 return;
             }
-
             if (remainingBombs == unknownNeighbors.length) {
                 this.markFlag(c[0], c[1]);
-                this.board.set(unknownNeighbors[0], CellType.FLAG);
+                this.board[c[0]][c[1]] = CellType.FLAG;
                 return;
             }
         }
-        // this.guess();
-    }
-
-    // pick topleft most unknown square.
-    private guess() {
-        let numSquares = this.startInfo!.boardNumCols* this.startInfo!.boardNumRows;
-        let unknownPositions = [...Array(numSquares).keys()].filter(p =>!this.board.has(p));
-        let c = this.posToCoords(unknownPositions[0])
-        this.select(c[0], c[1]);
     }
 
     private makeRepeatedMoves(): void {
@@ -85,29 +88,13 @@ export class SimpleSearchBot extends BasePlayer{
         let x = Math.floor(Math.random()*this.startInfo!.boardNumCols);
         let y = Math.floor(Math.random()*this.startInfo!.boardNumRows);
         this.makeMove();
-        setTimeout(() => { this.makeRepeatedMoves() } , 100);
+        setTimeout(() => { this.makeRepeatedMoves() } , 1000);
     }
 
-    private getNeighbors(pos: number): number[] {
-        let coord = this.posToCoords(pos)
-        let x = coord[0];
-        let y = coord[1];
+    private getNeighbors(x: number, y: number): number[][] {
         return Board.NEIGHBOR_RELATIVE_COORDS
             .map(c => [c[0]+x, c[1]+y])
             .filter(c => this.isInBounds(c[0], c[1]))
-            .map(c => this.coordsToPos(c[0], c[1]));
-    }
-
-     // Convert position in grid (single int, 'reading' direction) to [col, row]
-     private posToCoords(i: number): Array<number> {
-        let x = i%this.startInfo!.boardNumCols;
-        let y = Math.floor(i/this.startInfo!.boardNumRows);
-        return [x, y]
-    }
-
-    // Convert [col, row] to position in grid
-    private coordsToPos(x: number, y: number): number {
-        return y*this.startInfo!.boardNumCols + x;
     }
 
     private isInBounds(x: number, y: number): boolean {
