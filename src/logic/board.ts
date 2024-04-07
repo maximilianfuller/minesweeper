@@ -46,18 +46,29 @@ export class Board {
         }
 
         // find a random empty start square with no adjacent bombs
-        let zeroCells = []
+        let startPositions = []
         for (let y = 0; y < numRows; y++) {
             for (let x = 0; x < numCols; x++) {
                 if(
                     !this.isBomb(x, y) && 
                     !this.getNeighborCoords(x, y).some((c) => this.isBomb(c[0], c[1]))
                 ) {
-                    zeroCells.push(y*this.numRows+x);
+                    startPositions.push(y*this.numCols+x);
                 }
             }
         }
-        this.startPosition = zeroCells[Math.floor(Math.random()*zeroCells.length)];
+        // if none were found (common in toy boards for testing), find a non bomb square
+        if (startPositions.length == 0) {
+            for (let y = 0; y < numRows; y++) {
+                for (let x = 0; x < numCols; x++) {
+                    if (!this.isBomb(x, y)) {
+                        startPositions.push(y*this.numCols+x);
+                    }
+                }
+            }
+        }
+
+        this.startPosition = startPositions[Math.floor(Math.random()*startPositions.length)];
     }
 
     private isInBounds(x: number, y: number): boolean {

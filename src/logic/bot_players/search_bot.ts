@@ -9,14 +9,22 @@ import { assert } from 'console';
  */
 export class SearchBot extends BasePlayer{
 
+    
+
     private startInfo?: StartInfo;
     private isGameOver: boolean = false;
+    private hasWon: boolean = false;
 
     // board state, updated when new information is learned, or when flags are placed.
     private board: CellType[][] = [];
 
-    public constructor() {
+    // whether to move automatically on a timer.
+    private autoMove: boolean = false;
+
+
+    public constructor(autoMove: boolean = false) {
         super();
+        this.autoMove = autoMove;
     }
 
     notifyStart(startInfo: StartInfo): void {
@@ -28,8 +36,10 @@ export class SearchBot extends BasePlayer{
             }
             this.board.push(col);
         }
-        this.select(startInfo.startX, startInfo.startY);
-        this.makeRepeatedMoves();
+        if (this.autoMove) {
+            this.select(startInfo.startX, startInfo.startY);
+            this.makeRepeatedMoves();
+        }
     }
    
     notifyGameUpdate(newCells: Cell[]): void {
@@ -42,7 +52,7 @@ export class SearchBot extends BasePlayer{
     // Iterate through 'fringe' squares or numbers squares that border on 
     // unknown squares, and find 'freebies' or squares that can be clicked on 
     // safely, or marked as bombs.
-    private makeMove(): void {
+    makeMove(): void {
         let fringeCoords: number[][] = []
         for (let x = 0; x < this.startInfo!.boardNumCols; x++) {
             for (let y = 0; y < this.startInfo!.boardNumRows; y++) {
@@ -100,19 +110,24 @@ export class SearchBot extends BasePlayer{
         return x >= 0 && y >= 0 && x < this.startInfo!.boardNumCols && y < this.startInfo!.boardNumRows;
     }
 
-    // Convert position in grid (single int, 'reading' direction) to [col, row]
-    private posToCoords(i: number): Array<number> {
-        let x = i%this.startInfo!.boardNumCols;
-        let y = Math.floor(i/this.startInfo!.boardNumRows);
-        return [x, y]
+    notifyWin(): void {
+        console.log("WIN")
+        this.isGameOver = true;
+        this.hasWon = true;
+    }
+    notifyLoss(): void { 
+        console.log("LOSS")
+        this.isGameOver = true;
+        this.hasWon = false;
     }
 
-    // Convert [col, row] to position in grid
-    private coordsToPos(x: number, y: number): number {
-        return y*this.startInfo!.boardNumCols + x;
+    public gameOver(): boolean{
+        return this.isGameOver;
     }
 
-    notifyWin(): void { this.isGameOver = true;}
-    notifyLoss(): void { this.isGameOver = true;}
+    public winner(): boolean {
+        return this.hasWon;
+    }
+
 
 }

@@ -94,7 +94,7 @@ export class Referee {
             }
             return;
         }
-        let totalCells = this.board.numCols*this.board.numCols;
+        let totalCells = this.board.numCols*this.board.numRows;
         if (this.playerVisited[playerIndex].size >= totalCells-this.board.bombs.size) {
             this.isGameOver = true;
             this.onGameOver()
@@ -134,7 +134,7 @@ export class Referee {
             this.board.numCols, 
             this.board.numRows, 
             this.board.startPosition%this.board.numCols,
-            Math.floor(this.board.startPosition/this.board.numRows),
+            Math.floor(this.board.startPosition/this.board.numCols),
             this.board.bombs.size,
         );
     }
@@ -160,7 +160,7 @@ export class Referee {
     // Convert position in grid (single int, 'reading' direction)
     private posToCoords(i: number): Array<number> {
         let x = i%this.board.numCols;
-        let y = Math.floor(i/this.board.numRows);
+        let y = Math.floor(i/this.board.numCols);
         return [x, y]
     }
 

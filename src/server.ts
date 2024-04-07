@@ -72,7 +72,7 @@ function repeatedlyAddBot() {
   setTimeout(() => { repeatedlyAddBot() } , 1000);
 }
 
-repeatedlyAddBot();
+// repeatedlyAddBot();
 // addBot();
 
 app.get("", (req:Request, res:Response):void => {
@@ -90,7 +90,8 @@ function createBoard(config: any) {
   let numCols = config[0];
   let numRows = config[1];
   let numBombs = config[2];
-  return new Board(numCols, numRows, numBombs);
+  // return new Board(numCols, numRows, numBombs);
+  return new Board(2, 3, 1, new Set([3]))
 }
 
 function handleClientCreate(ws: any, url: string) {  
@@ -121,10 +122,10 @@ function handleClientCreate(ws: any, url: string) {
 function handleClientUpdate(ws: any, url: string, data: any) {
   let game = games.get(url)!;
   let coord = JSON.parse(data);
-  if (!game.has(ws.id)) return;
   game[ws.id].select(coord[0], coord[1]);
   if (game.referee.gameOver()) {
     // Scrub game from server
+    console.log("game " + url + " deleted.")
     games.delete(url);
   }
 }
