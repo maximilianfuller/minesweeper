@@ -53,7 +53,6 @@ export class SimpleSearchBot extends BasePlayer{
                     continue;
                 }
                 fringeCoords.push([x, y])
-
             }
         }
         for (let i = 0; i < fringeCoords.length; i++) {
@@ -88,7 +87,7 @@ export class SimpleSearchBot extends BasePlayer{
         let x = Math.floor(Math.random()*this.startInfo!.boardNumCols);
         let y = Math.floor(Math.random()*this.startInfo!.boardNumRows);
         this.makeMove();
-        setTimeout(() => { this.makeRepeatedMoves() } , 1000);
+        setTimeout(() => { this.makeRepeatedMoves() } , 100);
     }
 
     private getNeighbors(x: number, y: number): number[][] {

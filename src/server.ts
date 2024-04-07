@@ -19,7 +19,7 @@ import { FlagBot } from './logic/bot_players/flag_bot';
 let CONFIG : any = {
   "beginner": [9,9,10],
   "intermediate": [16,16,40],
-  "advanced": [30, 16, 100]
+  "advanced": [30, 16, 99]
 }
 
 const app:Application = express();
@@ -58,7 +58,7 @@ var botCount = 0
 function addBot() {
   let  url = "/game/bot_" + botCount++
   games.set(url, {});
-  let board = createBoard([10, 10, 10]);
+  let board = createBoard(CONFIG["intermediate"]);
   let p1 = new FlagBot();
   let p2 = new SimpleSearchBot();
   games.get(url)!.board = board;
@@ -69,7 +69,7 @@ function addBot() {
 
 function repeatedlyAddBot() {
   addBot();
-  setTimeout(() => { repeatedlyAddBot() } , 100);
+  setTimeout(() => { repeatedlyAddBot() } , 1000);
 }
 
 repeatedlyAddBot();

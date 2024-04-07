@@ -1,5 +1,8 @@
 import { BasePlayer, StartInfo} from '../player';
 
+/**
+ * Bot that loves to place flags and nothing else.
+ */
 export class FlagBot extends BasePlayer{
 
     private startInfo?: StartInfo;

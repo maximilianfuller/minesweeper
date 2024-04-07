@@ -1,5 +1,8 @@
 import { BasePlayer, StartInfo} from '../player';
 
+/**
+ * Bot that clicks randomly.
+ */
 export class RandomBot extends BasePlayer{
 
     private startInfo?: StartInfo;
