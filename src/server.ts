@@ -11,6 +11,7 @@ import { Board } from './logic/board';
 import { HumanSpectator } from './logic/human_spectator';
 import { RandomBot } from './logic/bot_players/random_bot';
 import { SimpleSearchBot } from './logic/bot_players/simple_search_bot';
+import { SearchBot } from './logic/bot_players/search_bot';
 import { FlagBot } from './logic/bot_players/flag_bot';
 
 
@@ -58,9 +59,9 @@ var botCount = 0
 function addBot() {
   let  url = "/game/bot_" + botCount++
   games.set(url, {});
-  let board = createBoard(CONFIG["intermediate"]);
+  let board = createBoard(CONFIG["advanced"]);
   let p1 = new FlagBot();
-  let p2 = new SimpleSearchBot();
+  let p2 = new SearchBot();
   games.get(url)!.board = board;
   games.get(url)!.p1 = p1;
   games.get(url)!.p2 = p2;
@@ -69,10 +70,10 @@ function addBot() {
 
 function repeatedlyAddBot() {
   addBot();
-  setTimeout(() => { repeatedlyAddBot() } , 1000);
+  setTimeout(() => { repeatedlyAddBot() } , 10);
 }
 
-// repeatedlyAddBot();
+repeatedlyAddBot();
 // addBot();
 
 app.get("", (req:Request, res:Response):void => {
@@ -90,8 +91,7 @@ function createBoard(config: any) {
   let numCols = config[0];
   let numRows = config[1];
   let numBombs = config[2];
-  // return new Board(numCols, numRows, numBombs);
-  return new Board(2, 3, 1, new Set([3]))
+  return new Board(numCols, numRows, numBombs);
 }
 
 function handleClientCreate(ws: any, url: string) {  

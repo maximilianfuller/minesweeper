@@ -94,6 +94,7 @@ export class Referee {
             }
             return;
         }
+        // Check if a player has revealed all non-bomb squares.
         let totalCells = this.board.numCols*this.board.numRows;
         if (this.playerVisited[playerIndex].size >= totalCells-this.board.bombs.size) {
             this.isGameOver = true;

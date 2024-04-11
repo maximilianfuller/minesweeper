@@ -11,6 +11,7 @@ export enum CellType {
     BOMB,
     UNKNOWN,
     FLAG,
+    FREE,
 }
 
 export class Cell {
