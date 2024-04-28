@@ -11,6 +11,9 @@ let DEFAULT_DELAY = 100
  * Bot that searches for bombs and safe squares
  */
 export class SearchBot extends BasePlayer{
+    private name: string;
+    private rating: number;
+
     startInfo?: StartInfo;
     private isGameOver: boolean = false;
     private hasWon: boolean = false;
@@ -26,8 +29,10 @@ export class SearchBot extends BasePlayer{
     
 
 
-    public constructor(autoMove: boolean = true, getMoveDelayMillisFn: ()=>number = ()=>DEFAULT_DELAY) {
+    public constructor(autoMove: boolean = true, getMoveDelayMillisFn: ()=>number = ()=>DEFAULT_DELAY, name: string="STEPHE", rating: number=0.0) {
         super();
+        this.name=name;
+        this.rating = rating;
         this.autoMove = autoMove;
         this.getMoveDelayMillisFn = getMoveDelayMillisFn;
     }
@@ -42,8 +47,12 @@ export class SearchBot extends BasePlayer{
             this.board.push(col);
         }
         if (this.autoMove) {
-            this.select(startInfo.startX, startInfo.startY);
-            this.makeRepeatedMoves(this.getMoveDelayMillisFn);
+            let moveDelayMillis = this.getMoveDelayMillisFn()
+            if (moveDelayMillis == 0) {
+                this.makeRepeatedMoves(this.getMoveDelayMillisFn);
+            } else {
+                setTimeout(() => { this.makeRepeatedMoves(this.getMoveDelayMillisFn) } , moveDelayMillis);
+            }
         }
     }
    
@@ -77,6 +86,14 @@ export class SearchBot extends BasePlayer{
     // Return whether a move was found.
     tryMakeMove(): boolean {
         if(this.gameOver()) return false;
+
+        // Make the opening move
+        if(this.autoMove && // only select starting square if automove is turned on
+            this.board[this.startInfo!.startX][this.startInfo!.startY] == CellType.UNKNOWN) {
+            this.select(this.startInfo!.startX, this.startInfo!.startY);
+            return true;
+        }
+
         
         let unknownCoords = this.getUnknownCoords();
         
@@ -205,7 +222,8 @@ export class SearchBot extends BasePlayer{
                 }
             }
         }
-        return coords;
+        this.shuffle(coords);
+        return coords
     }
 
 
@@ -225,7 +243,6 @@ export class SearchBot extends BasePlayer{
         this.hasWon = true;
     }
     notifyLoss(): void { 
-        console.log("LOSS")
         this.isGameOver = true;
         this.hasWon = false;
     }
@@ -247,5 +264,22 @@ export class SearchBot extends BasePlayer{
 
     private coordsToPos(x: number, y: number): number {
         return y*this.startInfo!.boardNumCols + x;
+    }
+
+    private shuffle(array: any[]): void {
+        for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
+
+    public getName(): string {
+        return this.name;
+    }
+
+    public getRating(): number {
+        return this.rating;
     }
 }

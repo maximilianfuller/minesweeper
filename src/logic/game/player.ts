@@ -1,4 +1,5 @@
 import { Cell } from './cell';
+import WebSocket from 'ws';
 
 export class StartInfo {
     public readonly boardNumCols: number;
@@ -6,19 +7,25 @@ export class StartInfo {
     public readonly startX: number;
     public readonly startY: number;
     public readonly numBombs: number;
+    public readonly playerNames: string[];
+    public readonly playerRatings: number[];
 
     public constructor(
         boardNumCols: number,
         boardNumRows: number,
         startX: number,
         startY: number,
-        numBombs: number
+        numBombs: number,
+        playerNames: string[],
+        playerRatings: number[],
     ) {
         this.boardNumCols = boardNumCols;
         this.boardNumRows = boardNumRows;
         this.startX = startX;
         this.startY = startY;
         this.numBombs = numBombs
+        this.playerNames = playerNames
+        this.playerRatings = playerRatings
     }
 }
 
@@ -30,6 +37,10 @@ export abstract class Player {
     abstract notifyLoss(): void;
     abstract notifyGameUpdate(newCells: Array<Cell>): void;
     abstract notifyEnemyGameUpdate(newCells: Array<Cell>): void;
+    abstract getName(): string;
+    abstract getRating(): number;
+    abstract getId(): string;
+    abstract setWebSocket(ws: WebSocket): void; // only relevant for humans coming from matchmaking
 
 }
 
@@ -63,4 +74,18 @@ export class BasePlayer extends Player{
     markFlag(x: number, y: number) {
         this.markFlagCallback(x, y);
     }
+
+    getName(): string {
+        return "STEPHE";
+    }
+
+    getRating(): number {
+        return 0.0;
+    }
+
+    getId(): string {
+        return this.getName();
+    }
+
+    setWebSocket(ws: WebSocket): void {}
 }

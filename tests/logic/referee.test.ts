@@ -1,8 +1,8 @@
-import { Referee } from '../../src/logic/referee';
-import { Board } from '../../src/logic/board';
-import { Cell, CellType } from '../../src/logic/cell';
-import { BasePlayer, StartInfo } from '../../src/logic/player';
-import { BaseSpectator } from '../../src/logic/spectator';
+import { Referee } from '../../src/logic/game/referee';
+import { Board } from '../../src/logic/game/board';
+import { Cell, CellType } from '../../src/logic/game/cell';
+import { BasePlayer, StartInfo } from '../../src/logic/game/player';
+import { BaseSpectator } from '../../src/logic/game/spectator';
 
 
 

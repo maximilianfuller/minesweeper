@@ -33,6 +33,8 @@ export class HumanSpectator extends Spectator{
         for (let i = 0; i < playerAllCells.length; i++) {
             data.push({
                 "spectator": true,
+                "playerName": this.startInfo!.playerNames[i],
+                "playerRating": Math.round(this.startInfo!.playerRatings[i]),
                 "start": start, 
                 "numRows": this.startInfo!.boardNumRows,
                 "numCols": this.startInfo!.boardNumCols,

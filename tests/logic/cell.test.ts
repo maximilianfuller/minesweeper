@@ -1,4 +1,4 @@
-import { Cell, CellType } from '../../src/logic/cell';
+import { Cell, CellType } from '../../src/logic/game/cell';
 
 describe('testing Cell class', () => {
   test('Can construct Cell', () => {

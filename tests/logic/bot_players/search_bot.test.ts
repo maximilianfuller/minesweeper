@@ -1,7 +1,7 @@
-import { Referee } from '../../../src/logic/referee';
-import { Board } from '../../../src/logic/board';
-import { SearchBot } from '../../../src/logic/bot_players/search_bot';
-import { FlagBot } from '../../../src/logic/bot_players/flag_bot';
+import { Referee } from '../../../src/logic/game/referee';
+import { Board } from '../../../src/logic/game/board';
+import { SearchBot } from '../../../src/logic/game/bot_players/search_bot';
+import { FlagBot } from '../../../src/logic/game/bot_players/flag_bot';
 
 
 

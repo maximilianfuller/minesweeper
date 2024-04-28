@@ -15,6 +15,14 @@ p {
   font-size: 8;
 }
 
+div.game_content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+}
+
 div.progress_bar_container {
   width: 200px;
   height: 20px;
@@ -41,16 +49,17 @@ div.progress_bar.enemy {
   background-color: darkred;
 }
 
-div.border {
-  width: 1000px;
-  height: 144px;
+div.board {
   position: relative;
   float:left;
   padding: 20px;
   border-color: #f1efe2 #716f64 #716f64 #f1efe2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-div.border0 {
+div.board0 {
   width: 500px;
   height: 144px;
   position: relative;
@@ -59,13 +68,17 @@ div.border0 {
   border-color: #f1efe2 #716f64 #716f64 #f1efe2;
 }
 
-div.border1 {
+div.board1 {
   width: 500px;
   height: 144px;
   position: relative;
   float:left;
   padding: 20px;
   border-color: #f1efe2 #716f64 #716f64 #f1efe2;
+}
+
+div.cells {
+  position: relative;
 }
 
 div.cell {

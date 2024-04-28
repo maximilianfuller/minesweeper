@@ -1,5 +1,5 @@
-import { Board } from '../../src/logic/board';
-import { Cell, CellType } from '../../src/logic/cell';
+import { Board } from '../../src/logic/game/board';
+import { Cell, CellType } from '../../src/logic/game/cell';
 
 
 describe('testing Board class', () => {

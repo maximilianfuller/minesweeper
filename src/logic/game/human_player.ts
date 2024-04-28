@@ -6,27 +6,31 @@ import WebSocket from 'ws';
 
 export class HumanPlayer extends BasePlayer{
 
-    private ws: WebSocket;
+    private sessionId: string;
+    private ws?: WebSocket;
     private startInfo?: StartInfo;
 
     // How many cells each player has uncovered.
     private playerProgress: number = 0;
     private enemyProgress: number = 0;
 
-    public constructor(ws: WebSocket) {
+    public constructor(sessionId: string, ws?: WebSocket) {
         super();
+        this.sessionId = sessionId;
         this.ws = ws;
     }
 
     private updateClient(
         cells: Array<Cell> = [], 
         enemyCells: Array<Cell> = [], 
-        gameOverMessage: String = "",
+        gameOverMessage: string = "",
     ) {
+        if(!this.ws) {return;}
         let start = this.startInfo!.boardNumCols*this.startInfo!.startY + this.startInfo!.startX;
         let totalProgress = this.startInfo!.boardNumCols * this.startInfo!.boardNumRows - this.startInfo!.numBombs
         let data = [{
             "spectator": false,
+            "playerName": this.getName(),
             "start": start, 
             "numRows": this.startInfo!.boardNumRows,
             "numCols": this.startInfo!.boardNumCols,
@@ -37,7 +41,7 @@ export class HumanPlayer extends BasePlayer{
             "totalProgress": totalProgress,
             "gameOverMessage": gameOverMessage,
         }]
-        this.ws.send(JSON.stringify(data));
+        this.ws!.send(JSON.stringify(data));
     }
 
     notifyStart(startInfo: StartInfo): void {
@@ -47,12 +51,12 @@ export class HumanPlayer extends BasePlayer{
 
     notifyWin(): void {
         this.updateClient([], [], "You Win!");
-        this.ws.close();
+        this.ws?.close();
     }
 
     notifyLoss(): void {
         this.updateClient([], [], "You Lose!");
-        this.ws.close();
+        this.ws?.close();
     }
 
     notifyGameUpdate(newCells: Cell[]): void {
@@ -64,5 +68,14 @@ export class HumanPlayer extends BasePlayer{
         this.enemyProgress += newCells.length;
         this.updateClient([], newCells);
     };
+
+    getId(): string {
+        return this.sessionId;
+    }
+
+    setWebSocket(ws: WebSocket): void {
+        this.ws = ws;
+        this.updateClient();
+    }
 
 }

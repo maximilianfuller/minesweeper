@@ -25,6 +25,7 @@ export class Referee {
     private playerFlags: Array<Set<number>>;
 
     private isGameOver: Boolean = false;
+    private winnerIndex: number = -1;
     private onGameOver: () => void = () => {};
 
 
@@ -44,6 +45,10 @@ export class Referee {
 
     public gameOver(): Boolean {
         return this.isGameOver;
+    }
+
+    public winner(): number {
+        return this.winnerIndex;
     }
 
     public addSpectator(spectator: Spectator): void {
@@ -80,6 +85,7 @@ export class Referee {
 
         if (this.board.isBomb(x, y)) {
             this.isGameOver = true;
+            this.winnerIndex = enemyIndex;
             this.onGameOver()
             this.players[playerIndex].notifyLoss();
             // All other players win. 
@@ -98,6 +104,7 @@ export class Referee {
         let totalCells = this.board.numCols*this.board.numRows;
         if (this.playerVisited[playerIndex].size >= totalCells-this.board.bombs.size) {
             this.isGameOver = true;
+            this.winnerIndex = playerIndex;
             this.onGameOver()
             this.players[playerIndex].notifyWin();
             for(let s of this.spectators) {
@@ -137,6 +144,8 @@ export class Referee {
             this.board.startPosition%this.board.numCols,
             Math.floor(this.board.startPosition/this.board.numCols),
             this.board.bombs.size,
+            this.players.map(p => p.getName()),
+            this.players.map(p => p.getRating()),
         );
     }
 
