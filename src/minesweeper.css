@@ -50,13 +50,17 @@ div.progress_bar.enemy {
 }
 
 div.board {
+  /* position: relative;
+  float:left;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center; */
+  width: 500px;
+  height: 144px;
   position: relative;
   float:left;
   padding: 20px;
-  border-color: #f1efe2 #716f64 #716f64 #f1efe2;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 div.board0 {
@@ -65,7 +69,6 @@ div.board0 {
   position: relative;
   float:left;
   padding: 20px;
-  border-color: #f1efe2 #716f64 #716f64 #f1efe2;
 }
 
 div.board1 {
@@ -74,7 +77,6 @@ div.board1 {
   position: relative;
   float:left;
   padding: 20px;
-  border-color: #f1efe2 #716f64 #716f64 #f1efe2;
 }
 
 div.cells {

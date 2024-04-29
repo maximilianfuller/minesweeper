@@ -3,7 +3,7 @@ $(document).ready(function() {
 		console.log("CLICK")
 		$.post("quickmatch", {}, function( data ) {
 			console.log("quickmatch sent")
-			let url = document.URL.replace('http', 'ws');
+			let url = document.URL.replace('http', 'ws') + "matchmake";
 			const webSocket = new WebSocket(url);
 			console.log(url)
 			webSocket.onmessage = (event) => {

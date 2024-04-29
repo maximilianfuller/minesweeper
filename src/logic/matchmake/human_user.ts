@@ -14,7 +14,11 @@ export class HumanUser extends BaseUser {
     }
 
     makePlayer(): Player {
-        return new HumanPlayer(this.sessionId);
+        return new HumanPlayer(this.sessionId, undefined, this.getRating());
+    }
+
+    autoQueue(): boolean {
+        return false;
     }
 
    

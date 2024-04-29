@@ -71,7 +71,11 @@ webSocket.onmessage = (event) => {
 };
 
 function setupBoard(board, parentDiv) {
-  parentDiv.text(board.playerName + '\n' + board.playerRating);
+  let profile = $('<div>').addClass('profile')
+  profile.text(board.playerName + '\n' + board.playerRating);
+  parentDiv.append(profile);
+
+
   let cells = $('<div>').addClass('cells')
   parentDiv.append(cells);
   let isMouseDown = false
@@ -95,6 +99,7 @@ function setupBoard(board, parentDiv) {
         }
         x = id % board.numCols;
         y = Math.floor(id / board.numCols);
+        console.log("sending: " + [x,y])
         webSocket.send(JSON.stringify([x, y]));
       })
       cell.contextmenu(function() {

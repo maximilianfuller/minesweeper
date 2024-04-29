@@ -10,14 +10,17 @@ export class HumanPlayer extends BasePlayer{
     private ws?: WebSocket;
     private startInfo?: StartInfo;
 
+    private rating: number;
+
     // How many cells each player has uncovered.
     private playerProgress: number = 0;
     private enemyProgress: number = 0;
 
-    public constructor(sessionId: string, ws?: WebSocket) {
+    public constructor(sessionId: string, ws?: WebSocket, rating: number = 0) {
         super();
         this.sessionId = sessionId;
         this.ws = ws;
+        this.rating = rating
     }
 
     private updateClient(
@@ -31,6 +34,7 @@ export class HumanPlayer extends BasePlayer{
         let data = [{
             "spectator": false,
             "playerName": this.getName(),
+            "playerRating": Math.round(this.getRating()),
             "start": start, 
             "numRows": this.startInfo!.boardNumRows,
             "numCols": this.startInfo!.boardNumCols,
@@ -76,6 +80,10 @@ export class HumanPlayer extends BasePlayer{
     setWebSocket(ws: WebSocket): void {
         this.ws = ws;
         this.updateClient();
+    }
+
+    getRating(): number {
+        return this.rating
     }
 
 }

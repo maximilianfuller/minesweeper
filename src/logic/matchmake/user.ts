@@ -1,4 +1,5 @@
 import { FlagBot } from "../game/bot_players/flag_bot";
+import { HumanPlayer } from "../game/human_player";
 import { Player } from "../game/player";
 
 export abstract class User {
@@ -6,6 +7,7 @@ export abstract class User {
     abstract makePlayer(): Player;
     abstract getRating(): number;
     abstract handleResult(opponent: User, isWin: boolean): void;
+    abstract autoQueue(): boolean;
 }
 
 const DEFAULT_STARTING_RATING = 1500;
@@ -38,9 +40,14 @@ export class BaseUser extends User {
         } else {
             this.rating -= K_VAL*(winOdds);
         }
+        console.log("rating updated: " + this.rating)
     }
 
     makePlayer(): Player {
         return new FlagBot();
+    }
+
+    autoQueue(): boolean {
+        return true;
     }
 }
